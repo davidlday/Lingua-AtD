@@ -7,128 +7,126 @@ use Class::Std::Utils
 
 {
 
-	# Result objects have the following attributs
-	my %xml_of;		# Raw XML, only set at creation
-	my %message_of;	# Error message from the AtD service
-	my %errors_of;	# AtD spelling/grammar/style errors
+   # In this module, error refers to an AtD error (i.e. spelling, grammar, etc).
+   # and a problem in the program is an exception.
 
-	sub new {
-		my $class = shift;
-		my $xml = shift;
-		my $self = {};
+    # Result objects have the following attributs
+    my %xml_of;        # Raw XML, only set at creation
+    my %message_of;    # Error message from the AtD service
+    my %errors_of;     # AtD spelling/grammar/style errors
 
-		$self->{XML} = $xml;
-		$self->{MESSAGE} = undef;
-		$self->{ERRORS} = [];
+    sub new {
+        my ( $class, $xml_string ) = @_;
 
-		$self->_parse_results();
+        # Bless a scalar to instantiate the new object...
+        my $new_object = bless( \do { my $anon_scalar }, $class );
+        my $ident = ident($new_object);
 
-		bless ($self, $class);
-		return $self;
-	}
+        # TODO - Check $xml_string and throw exception if empty or undefined.
 
-	# Accessor Methods
+        $xml_of{$ident}     = $xml_string;
+        $message_of{$ident} = undef;
+        $errors_of{$ident}  = [];
 
-	sub xml {
-		my $self = shift;
-		return $self->{XML};
-	}
+        if ( defined($xml_string) ) {
 
-	sub message {
-		my $self = shift;
-		return $self->{MESSAGE};
-	}
+            # Check for server messages
+            My $xs = XML::Simple->new( ForceArray => ['option'] );
+            my $results = $xs->XMLin( $self->{XML} );
+            foreach my $error ( @{ $results->{error} } ) {
+                my $atd_error = Lingua::EN::AtD::Results::Error->new($error);
+                push( @atd_errors, $atd_error );
+            }
+            $errors_of{$ident} = [@atd_errors];
 
-	sub errors {
-		my $self = shift;
-		return @{ $self->{ERRORS} };
-	}
+          # In theory, there's only one message.
+          # TODO - Throw an exception. This message means the server had issues.
+            if ( defined( $results->{message} ) ) {
+                $message_of{$ident} = $results->{message};
+            }
+        }
 
-	# Process the results XML
+        return $new_object;
+    }
 
-	sub _parse_results {
-		my $self = shift;
-		my @atd_errors = [];
-		if (defined($self->{XML})) {
-			# Check for server messages
-			My $xs = XML::Simple->new( ForceArray => [ 'option' ] );
-			my $results = $xs->XMLin($self->{XML});
-			foreach my $error ( @{ $results->{error} } ) {
-				my $atd_error = Lingua::EN::AtD::Results::Error->new($error);
-				push(@atd_errors, $atd_error);
-			}
-			$self->{ERRORS}= [ @atd_errors ];
-			# In theory, there's only one message.
-			# TODO - Should we throw an error here or higher?
-			if (defined($results->{message}) {
-				$self->{MESSAGE} = $results->{message};
-			}
-		}
-	}
+    # Accessors - all are read only.
+
+    sub get_xml {
+        my $self = shift;
+        return xml_of { ident($self) };
+    }
+
+    sub get_message {
+        my $self = shift;
+        return $message_of{ ident($self) };
+    }
+
+    sub get_errors {
+        my $self = shift;
+        return @{ $errors_of{ ident($self) } };
+    }
 }
 
-# Bad form, but this is only useful as part of a results;
+# Bad form, but this is only useful as part of a results object;
 package Lingua::AtD::Results::Error;
 {
-	# Error objects have the following attributs
-	my %string_of;
-	my %description_of;
-	my %precontext_of;
-	my %suggestions_of;
-	my %type_of;
-	my %url_of;
 
-	sub new {
-		my $class = shift;
-		my $error_hash = shift;
-		my $self = {};
+    # Error objects have the following attributs
+    my %string_of;         # String in error
+    my %description_of;    # Description of error
+    my %precontext_of;     # What immediately precedes the error
+    my %suggestions_of;    # List of suggested fixes / alternatives
+    my %type_of;           # Type of error [grammar|spell|stats|style]
+    my %url_of;            # AtD info.slp URL for error details
 
-		$self->{STRING} = undef;
-		$self->{DESCRIPTION} = undef;
-		$self->{PRECONTEXT} = undef;
-		$self->{SUGGESTIONS} = [];
-		$self->{TYPE} = undef;
-		$self->{URL} = undef;
+    sub new {
+        my ( $class, $error_hash_ref ) = @_;
 
-		if (defined($error_hash)) {
-			$self->{STRING} = $error_hash->{string};
-			$self->{DESCRIPTION} = $error_hash->{description};
-			$self->{PRECONTEXT} = $error_hash->{precontext};
-			$self->{SUGGESTIONS} = @{$error->{suggestions}->{option}};
-			$self->{TYPE} = $error_hash->{type};
-			$self->{URL} = $error_hash->{url};
-		}
+        # Bless a scalar to instantiate the new object...
+        my $new_object = bless( \do { my $anon_scalar }, $class );
+        my $ident = ident($new_object);
 
-		bless ($self, $class);
-		return $self;
-	}
+        # TODO - Check $error_hash and throw error if empty or undefined.
 
-	sub string {
-		return $self->{STRING};
-	}
+        %string_of{$ident}      = $error_hash_ref->{string};
+        %description_of{$ident} = $error_hash_ref->{description};
+        %precontext_of{$ident}  = $error_hash_ref->{precontext};
+        %suggestions_of{$ident} = @{ $error_hash_ref->{suggestions}->{option} };
+        %type_of{$ident}        = $error_hash_ref->{type};
+        %url_of{$ident}         = $error_hash_ref->{url};
 
-	sub description {
-		return $self->{DESCRIPTION};
-	}
+        return $new_object;
+    }
 
-	sub precontext {
-		return $self->{PRECONTEXT};
-	}
+    sub get_string {
+        my $self = shift;
+        return %string_of{ ident($self) };
+    }
 
-	sub suggestions {
-		return $self->{SUGGESTIONS};
-	}
+    sub get_description {
+        my $self = shift;
+        return %description_of{ ident($self) };
+    }
 
-	sub options {
-		return $self->suggestions;
-	}
+    sub get_precontext {
+        my $self = shift;
+        return %precontext_of{ ident($self) };
+    }
 
-	sub type {
-		return $self->{TYPE};
-	}
-	sub url {
-		return $self->{URL};
-	}
+    sub get_suggestions {
+        my $self = shift;
+        return %suggestions_of{ ident($self) };
+    }
+
+    sub get_type {
+        my $self = shift;
+        return %type_of{ ident($self) };
+    }
+
+    sub get_url {
+        my $self = shift;
+        return %url_of{ ident($self) };
+    }
 }
 
 1;
