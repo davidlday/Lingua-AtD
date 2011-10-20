@@ -8,7 +8,6 @@ use Lingua::AtD::Results;
 use Lingua::AtD::Scores;
 
 # ABSTRACT: Provides an OO wrapper for After the Deadline grammar and spelling service.
-our $VERSION = '0.01';
 
 {
 
@@ -20,7 +19,7 @@ our $VERSION = '0.01';
     my %service_url_of;    # Error message from the AtD service
 
     #    my %errors_of;     # AtD spelling/grammar/style errors
-    my $DEFAULT_API_KEY = 'Lingua-AtD-v' . $VERSION;   # Add version number here
+    my $DEFAULT_API_KEY = 'Lingua-AtD-v' . $Lingua::AtD::VERSION;   # Add version number here
     my $DEFAULT_SERVICE_URL = 'http://service.afterthedeadline.com/';
 
     sub new {
@@ -57,7 +56,7 @@ our $VERSION = '0.01';
         my $ident = ident($self);
         my $url   = $service_url_of{$ident} . $verb;
         my $ua    = LWP::UserAgent->new();
-        $ua->agent("AtD Perl Module/$VERSION");
+        $ua->agent('AtD Perl Module/'.$Lingua::AtD::VERSION);
 
         my $response = $ua->post( $url, Content => [ %{$args_ref} ] );
 
