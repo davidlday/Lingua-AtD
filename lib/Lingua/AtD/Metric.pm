@@ -44,6 +44,19 @@ use Class::Std::Utils;
         my $self = shift;
         return $value_of{ ident($self) };
     }
+
+    sub DESTROY {
+        my $self = shift;
+        my $ident = ident($self);
+        
+        delete $hashref_of{$ident};
+        delete $type_of{$ident};
+        delete $key_of{$ident};
+        delete $value_of{$ident};
+        
+        return;
+    }
+
 }
 
 1;

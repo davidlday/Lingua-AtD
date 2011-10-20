@@ -86,6 +86,22 @@ use Class::Std::Utils;
         my $self = shift;
         return $hashref_of{ ident($self) };
     }
+
+    sub DESTROY {
+        my $self = shift;
+        my $ident = ident($self);
+        
+        delete $hashref_of{$ident};
+        delete $string_of{$ident};
+        delete $description_of{$ident};
+        delete $precontext_of{$ident};
+        delete $suggestions_of{$ident};
+        delete $type_of{$ident};
+        delete $url_of{$ident};
+        
+        return;
+    }
+
 }
 
 1;

@@ -75,6 +75,18 @@ use Class::Std::Utils;
           ? @{ $errors_of{ ident($self) } }
           : undef;
     }
+
+    sub DESTROY {
+        my $self = shift;
+        my $ident = ident($self);
+        
+        delete $xml_of{$ident};
+        delete $message_of{$ident};
+        delete $errors_of{$ident};
+        
+        return;
+    }
+
 }
 
 1;

@@ -1,4 +1,5 @@
 package Lingua::AtD;
+
 # ABSTRACT: Provides an OO wrapper for After the Deadline grammar and spelling service.
 use strict;
 use warnings;
@@ -10,15 +11,14 @@ use Lingua::AtD::Scores;
 
 {
 
-   # In this module, error refers to an AtD error (i.e. spelling, grammar, etc).
-   # and a problem in the program is an exception.
+# Result objects have the following attributes
+# TODO - add host / port options, and options based on language (i.e. en, fr, etc).
+    my %api_key_of;        # api key passed to service.
+    my %service_url_of;    # URL for AtD service.
 
-    # Result objects have the following attributes
-    my %api_key_of;        # Raw XML, only set at creation
-    my %service_url_of;    # Error message from the AtD service
-
-    #    my %errors_of;     # AtD spelling/grammar/style errors
-    my $DEFAULT_API_KEY = 'Lingua-AtD-v' . $Lingua::AtD::VERSION;   # Add version number here
+    # Class defaults
+    my $DEFAULT_API_KEY =
+      'Lingua-AtD-v' . $Lingua::AtD::VERSION;    # Add version number here
     my $DEFAULT_SERVICE_URL = 'http://service.afterthedeadline.com/';
 
     sub new {
@@ -55,7 +55,7 @@ use Lingua::AtD::Scores;
         my $ident = ident($self);
         my $url   = $service_url_of{$ident} . $verb;
         my $ua    = LWP::UserAgent->new();
-        $ua->agent('AtD Perl Module/'.$Lingua::AtD::VERSION);
+        $ua->agent( 'AtD Perl Module/' . $Lingua::AtD::VERSION );
 
         my $response = $ua->post( $url, Content => [ %{$args_ref} ] );
 
@@ -92,6 +92,16 @@ use Lingua::AtD::Scores;
     #	TODO - Not sure it's useful since all errors carry their own URL.
     #    sub get_info {
     #    }
+
+    sub DESTROY {
+        my $self  = shift;
+        my $ident = ident($self);
+
+        delete $api_key_of{$ident};
+        delete $service_url_of{$ident};
+
+        return;
+    }
 
 }
 

@@ -89,6 +89,18 @@ use Class::Std::Utils;
           ? @{ $metrics_of{ ident($self) } }
           : undef;
     }
+
+    sub DESTROY {
+        my $self = shift;
+        my $ident = ident($self);
+        
+        delete $xml_of{$ident};
+        delete $message_of{$ident};
+        delete $metrics_of{$ident};
+        
+        return;
+    }
+
 }
 
 1;
