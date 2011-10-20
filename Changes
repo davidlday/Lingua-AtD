@@ -2,3 +2,4 @@ Revision history for {{$dist->name}}
 
 {{$NEXT}}
     * Updated dist.ini and began build testing.
+    * Began documentation.

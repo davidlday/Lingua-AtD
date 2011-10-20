@@ -1,4 +1,5 @@
 package Lingua::AtD;
+# ABSTRACT: Provides an OO wrapper for After the Deadline grammar and spelling service.
 use strict;
 use warnings;
 use Carp;
@@ -6,8 +7,6 @@ use Class::Std::Utils;
 use LWP::UserAgent;
 use Lingua::AtD::Results;
 use Lingua::AtD::Scores;
-
-# ABSTRACT: Provides an OO wrapper for After the Deadline grammar and spelling service.
 
 {
 

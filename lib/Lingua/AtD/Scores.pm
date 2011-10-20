@@ -1,12 +1,11 @@
 package Lingua::AtD::Scores;
+# ABSTRACT: Encapsulates the Scores response from a call to AtD.
 use strict;
 use warnings;
 use Carp;
 use XML::Simple;
 use Lingua::AtD::Metric;
 use Class::Std::Utils;
-
-# ABSTRACT: Encapsulates the Scores response from a call to AtD.
 
 {
 

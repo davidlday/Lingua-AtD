@@ -1,10 +1,9 @@
 package Lingua::AtD::Metric;
+# ABSTRACT: Encapsulates the Metrics contained in Scores.
 use strict;
 use warnings;
 use Carp;
 use Class::Std::Utils;
-
-# ABSTRACT: Encapsulates the Metrics contained in Scores.
 
 {
 

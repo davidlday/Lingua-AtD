@@ -1,10 +1,9 @@
 package Lingua::AtD::Error;
+# ABSTRACT: Encapsulates the Errors contained in Results.
 use strict;
 use warnings;
 use Carp;
 use Class::Std::Utils;
-
-# ABSTRACT: Encapsulates the Errors contained in Results.
 
 {
 

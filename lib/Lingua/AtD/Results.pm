@@ -1,12 +1,11 @@
 package Lingua::AtD::Results;
+# ABSTRACT: Encapsulates the Results response from a call to AtD.
 use strict;
 use warnings;
 use Carp;
 use XML::Simple;
 use Lingua::AtD::Error;
 use Class::Std::Utils;
-
-# ABSTRACT: Encapsulates the Results response from a call to AtD.
 
 {
 
