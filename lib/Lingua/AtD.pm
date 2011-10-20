@@ -91,9 +91,9 @@ our $VERSION = '0.01';
         return Lingua::AtD::Scores->new($raw_response);
     }
 
-#	TODO - Not sure it's useful since all errors carry their own URL.
-#    sub get_info {
-#    }
+    #	TODO - Not sure it's useful since all errors carry their own URL.
+    #    sub get_info {
+    #    }
 
 }
 

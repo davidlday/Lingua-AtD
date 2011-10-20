@@ -21,7 +21,7 @@ use Class::Std::Utils;
         my $new_object = bless( anon_scalar(), $class );
         my $ident = ident($new_object);
 
-        # TODO - Check $metrics_hash_ref and throw exception if empty or undefined.
+     # TODO - Check $metrics_hash_ref and throw exception if empty or undefined.
 
         $hashref_of{$ident} = $metrics_hash_ref;
         $type_of{$ident}    = $metrics_hash_ref->{type};

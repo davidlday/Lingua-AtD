@@ -24,7 +24,7 @@ use Class::Std::Utils;
         my $new_object = bless( anon_scalar(), $class );
         my $ident = ident($new_object);
 
-        # TODO - Check $error_hash_ref and throw exception if empty or undefined.
+       # TODO - Check $error_hash_ref and throw exception if empty or undefined.
 
         $hashref_of{$ident}     = $error_hash_ref;
         $string_of{$ident}      = $error_hash_ref->{string};
@@ -69,18 +69,18 @@ use Class::Std::Utils;
         return $type_of{ ident($self) };
     }
 
-	sub has_url {
+    sub has_url {
         my $self = shift;
         return defined( $url_of{ ident($self) } );
-	}
+    }
 
     sub get_url {
-        my ($self, $theme) = @_;
+        my ( $self, $theme ) = @_;
         my $info_url = $url_of{ ident($self) };
-		if ($self->has_url() && defined($theme)) {
-			$info_url .= '&theme='.$theme;
-		}
-		return $info_url;
+        if ( $self->has_url() && defined($theme) ) {
+            $info_url .= '&theme=' . $theme;
+        }
+        return $info_url;
     }
 
     sub get_hashref {
