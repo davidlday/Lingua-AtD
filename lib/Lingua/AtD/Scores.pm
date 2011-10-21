@@ -14,12 +14,12 @@ use Class::Std;
     my %server_message_of  :ATTR( :get<server_message> );
     my %metrics_of         :ATTR();
 
-    sub BUILD {
+    sub START {
         my ($self, $ident, $arg_ref) = @_;
         my @atd_metrics = ();
 
         my $parser = XML::LibXML->new();
-        my $dom    = $parser->load_xml( string => $arg_ref->{xml} );
+        my $dom    = $parser->load_xml( string => $xml_of{$ident} );
 
         # Check for server message. Not sure if stats will do this.
         # For now, tuck it away as an attribute. In theory, there's only one message.

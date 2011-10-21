@@ -7,7 +7,7 @@ use Class::Std;
 
 {
 
-    # Error objects have the following attributes
+    # Attributes
     my %string_of       :ATTR( :init_arg<string> :get<string>  );
     my %description_of  :ATTR( :init_arg<description> :get<description>  );
     my %precontext_of   :ATTR( :init_arg<precontext> :get<precontext> );

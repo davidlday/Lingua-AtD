@@ -1,56 +1,31 @@
 package Lingua::AtD;
-
 # ABSTRACT: Provides an OO wrapper for After the Deadline grammar and spelling service.
 use strict;
 use warnings;
 use Carp;
-use Class::Std::Utils;
+use Class::Std;
 use LWP::UserAgent;
 use Lingua::AtD::Results;
 use Lingua::AtD::Scores;
 
 {
 
-# Result objects have the following attributes
-# TODO - add host / port options, and options based on language (i.e. en, fr, etc).
-    my %api_key_of;        # api key passed to service.
-    my %service_url_of;    # URL for AtD service.
+    # TODO - add host / port options, and options based on language (i.e. en, fr, etc).
+    my %api_key_of      :ATTR( :init_arg<api_key> :get<api_key> :default<'Lingua-AtD'> );
+    my %service_host_of :ATTR( :init_arg<host> :get<service_host> :default<'service.afterthedeadline.com'> );
+    my %service_port_of :ATTR( :init_arg<port> :get<service_port> :default<80> );
+    my %service_url_of  :ATTR( :get<service_url> );
 
-    # Class defaults
-    my $DEFAULT_API_KEY =
-      'Lingua-AtD-v' . $Lingua::AtD::VERSION;    # Add version number here
-    my $DEFAULT_SERVICE_URL = 'http://service.afterthedeadline.com/';
+    sub START {
+        my ($self, $ident, $arg_ref) = @_;
 
-    sub new {
-        my ( $class, $args_ref ) = @_;
+        # Construct the URL
+        $service_url_of{$ident} = 'http://' . $service_host_of{$ident} . ':' . $service_port_of{$ident} . '/';
 
-        # Bless a scalar to instantiate the new object...
-        my $new_object = bless( anon_scalar(), $class );
-        my $ident = ident($new_object);
-
-        $api_key_of{$ident} =
-          defined( $args_ref->{api_key} )
-          ? $args_ref->{api_key}
-          : $DEFAULT_API_KEY;
-        $service_url_of{$ident} =
-          defined( $args_ref->{service_url} )
-          ? $args_ref->{service_url}
-          : $DEFAULT_SERVICE_URL;
-
-        return $new_object;
+        return;
     }
 
-    sub get_api_key {
-        my $self = shift;
-        return $api_key_of{ ident($self) };
-    }
-
-    sub get_service_url {
-        my $self = shift;
-        return $service_url_of{ ident($self) };
-    }
-
-    sub _atd {
+    sub _atd : PRIVATE {
         my ( $self, $verb, $arg_ref ) = @_;
         my $ident = ident($self);
         my $url   = $service_url_of{$ident} . $verb;
@@ -92,16 +67,6 @@ use Lingua::AtD::Scores;
     #	TODO - Not sure it's useful since all errors carry their own URL.
     #    sub get_info {
     #    }
-
-    sub DESTROY {
-        my $self  = shift;
-        my $ident = ident($self);
-
-        delete $api_key_of{$ident};
-        delete $service_url_of{$ident};
-
-        return;
-    }
 
 }
 
