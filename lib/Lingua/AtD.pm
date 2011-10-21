@@ -185,8 +185,12 @@ From the L<API Documentation|http://www.afterthedeadline.com/api.slp>: I<Returns
 
 No known bugs.
 
+=head1 IRONY
+
+Wouldn't it be kind of funny if I had a ton of spelling/grammar/style errors in my documentation? Yeah, it would. And I bet there are. Shame on my for not running my documentation through my own module.
+
 =head1 SEE ALSO
 
 See the L<API Documentation|http://www.afterthedeadline.com/api.slp> at After the Deadline's website.
 
-NB: In the API Documentation, there is a fourth service called B</info.slp>. I do not plan to implement this. Each Lingua::AtD::Error supplies an informative URL when one is available. I see no reason to call this independently, but feel free to submit a patch if you find a reason.
+B<NB:> In the L<API Documentation|http://www.afterthedeadline.com/api.slp>, there is a fourth service called B</info.slp>. I do not plan to implement this. Each Lingua::AtD::Error supplies an informative URL when one is available. I see no reason to call this independently, but feel free to submit a patch if you find a reason.

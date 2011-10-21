@@ -11,7 +11,7 @@ use Class::Std;
 
     # Attributes
     my %xml_of             :ATTR( :init_arg<xml> :get<xml> );
-    my %server_message_of  :ATTR( :get<server_message> );
+    my %server_message_of  :ATTR( :get<server_exception> );
     my %errors_of          :ATTR();
 
     sub START {
@@ -111,6 +111,40 @@ __END__
     
 =head1 DESCRIPTION
 
-<description>
+Encapsulates conversion of the XML response from the AtD server into a list of spelling/grammar/style error objects (L<Lingua::AtD::Error>).
 
-=head1 METHODS
+=method new
+
+    # Possible, but not likely
+    my $atd_results = Lingua::AtD::Results->new($xml_response);
+    foreach my $atd_error ($atd_results->get_errors()) {
+        # Do something really fun...
+    }
+    
+Lingua::AtD::Results objects should only ever be created from method calls to L<Lingua::AtD>. However, if you have saved XML responses from prior calls to AtD, you can use this object to convert those responses into PERL objects. I won't stop you.
+
+See the L<DESCRIPTION> for typical usage.
+
+=method has_server_exception
+
+Convenience method to see if the AtD server returned an error message.
+
+=method get_server_exception
+
+Exception message from the server.
+
+=method has_errors
+
+Convenience method to see if the XML response from AtD actually contained any spelling/grammar/style errors. These are not exceptions (see L<get_server_exception>). These are expected, and in fact are what you've asked for.
+
+=method get_errors
+
+Returns a list of spelling/grammar/style errors as L<Lingua::AtD::Error> objects.
+
+=method get_xml
+
+Returns a string containing the raw XML response from the AtD service call.
+
+=head1 SEE ALSO
+
+See the L<API Documentation|http://www.afterthedeadline.com/api.slp> at After the Deadline's website.
