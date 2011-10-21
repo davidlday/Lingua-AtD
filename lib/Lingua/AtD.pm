@@ -8,6 +8,7 @@ use Class::Std::Utils;
 use LWP::UserAgent;
 use Lingua::AtD::Results;
 use Lingua::AtD::Scores;
+use Data::Dumper;
 
 {
 
@@ -51,13 +52,13 @@ use Lingua::AtD::Scores;
     }
 
     sub _atd {
-        my ( $self, $verb, $args_ref ) = @_;
+        my ( $self, $verb, $arg_ref ) = @_;
         my $ident = ident($self);
         my $url   = $service_url_of{$ident} . $verb;
         my $ua    = LWP::UserAgent->new();
         $ua->agent( 'AtD Perl Module/' . $Lingua::AtD::VERSION );
 
-        my $response = $ua->post( $url, Content => [ %{$args_ref} ] );
+        my $response = $ua->post( $url, Content => [ %{$arg_ref} ] );
 
         #TODO - Add some error checking for the response and throw exceptions.
         return $response->content;
@@ -69,7 +70,7 @@ use Lingua::AtD::Scores;
         my $raw_response =
           $self->_atd( 'checkDocument',
             { key => $api_key_of{$ident}, data => $text } );
-        return Lingua::AtD::Results->new($raw_response);
+        return Lingua::AtD::Results->new( { xml => $raw_response } );
     }
 
     sub check_grammar {
@@ -78,7 +79,7 @@ use Lingua::AtD::Scores;
         my $raw_response =
           $self->_atd( 'checkGrammar',
             { key => $api_key_of{$ident}, data => $text } );
-        return Lingua::AtD::Results->new($raw_response);
+        return Lingua::AtD::Results->new( { xml => $raw_response } );
     }
 
     sub stats {
@@ -86,7 +87,7 @@ use Lingua::AtD::Scores;
         my $ident = ident($self);
         my $raw_response =
           $self->_atd( 'stats', { key => $api_key_of{$ident}, data => $text } );
-        return Lingua::AtD::Scores->new($raw_response);
+        return Lingua::AtD::Scores->new( { xml => $raw_response } );
     }
 
     #	TODO - Not sure it's useful since all errors carry their own URL.

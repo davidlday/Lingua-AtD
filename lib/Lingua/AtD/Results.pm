@@ -3,65 +3,61 @@ package Lingua::AtD::Results;
 use strict;
 use warnings;
 use Carp;
-use XML::Simple;
+use XML::XPath;
 use Lingua::AtD::Error;
-use Class::Std::Utils;
+use Class::Std;
 
 {
 
     # Result objects have the following attributes
-    my %xml_of;        # Raw XML, only set at creation
-    my %message_of;    # Error message from the AtD service
-    my %errors_of;     # AtD spelling/grammar/style errors
+    my %xml_of             :ATTR( :init_arg<xml> :get<xml> );
+    my %server_message_of  :ATTR( :get<server_message> );
+    my %errors_of          :ATTR();
 
-    sub new {
-        my ( $class, $xml_string ) = @_;
-
-        # Bless a scalar to instantiate the new object...
-        my $new_object = bless( anon_scalar(), $class );
-        my $ident = ident($new_object);
-
-        # TODO - Check $xml_string and throw exception if empty or undefined.
-
-        $xml_of{$ident}     = $xml_string;
-        $message_of{$ident} = undef;
-        $errors_of{$ident}  = [];
+    sub BUILD {
+        my ($self, $ident, $arg_ref) = @_;
         my @atd_errors = ();
 
-        if ( defined($xml_string) ) {
-
-            # Check for server messages
-            my $xs = XML::Simple->new( ForceArray => ['option'] );
-            my $results = $xs->XMLin( $xml_of{$ident} );
-
-            foreach my $xml_error ( @{ $results->{error} } ) {
-                my $atd_error = Lingua::AtD::Error->new($xml_error);
-                push( @atd_errors, $atd_error );
+        my $xp = XML::XPath->new( xml => $arg_ref->{xml} );
+        my $nodeset = $xp->findnodes('//error');
+        foreach my $node ( $nodeset->get_nodelist ) {
+            my @options = ();
+            my $option_nodeset = $node->findvalue('option');
+            foreach my $option_node ( $option_nodeset->get_nodelist ) {
+                push(@options, $option_node->string_value); # TODO - Get values!
             }
-            $errors_of{$ident} = [@atd_errors];
-
-          # In theory, there's only one message.
-          # TODO - Throw an exception. This message means the server had issues.
-            if ( defined( $results->{message} ) ) {
-                $message_of{$ident} = $results->{message};
-            }
+            my $atd_error   = Lingua::AtD::Error->new(
+                {
+                    string   => $node->findvalue('string'),
+                    description  => $node->findvalue('description'),
+                    precontext  => $node->findvalue('precontext'),
+                    suggestions => [@options],
+                    type  => $node->findvalue('type'),
+                    url  => $node->findvalue('url')
+                }
+            );
+            push( @atd_errors, $atd_error );
         }
+        $errors_of{$ident} = [@atd_errors];
 
-        # TODO - Throw an exception if there's no xml_string.
+        # Check for server message.
+        # TODO - Throw an exception. This message means the server had issues.
+        # For now, tuck it away as an attribute. In theory, there's only one message.
+        #~ if ( defined( $results->{message} ) ) {
+            #~ $server_message_of{$ident} = $results->{message};
+        #~ }
+#~ 
+        #~ foreach my $xml_error ( @{ $results->{error} } ) {
+            #~ my $atd_error = Lingua::AtD::Error->new($xml_error);
+            #~ push( @atd_errors, $atd_error );
+        #~ }
 
-        return $new_object;
+        return;
     }
 
-    # Accessors - all are read only.
-
-    sub get_xml {
+    sub has_server_exception {
         my $self = shift;
-        return $xml_of{ ident($self) };
-    }
-
-    sub get_message {
-        my $self = shift;
-        return $message_of{ ident($self) };
+        return defined( $server_message_of{ ident($self) } );
     }
 
     sub has_errors {
@@ -74,17 +70,6 @@ use Class::Std::Utils;
         return $self->has_errors()
           ? @{ $errors_of{ ident($self) } }
           : undef;
-    }
-
-    sub DESTROY {
-        my $self = shift;
-        my $ident = ident($self);
-        
-        delete $xml_of{$ident};
-        delete $message_of{$ident};
-        delete $errors_of{$ident};
-        
-        return;
     }
 
 }
