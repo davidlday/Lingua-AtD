@@ -2,6 +2,3 @@ Revision history for {{$dist->name}}
 
 {{$NEXT}}
     * Original release
-    * Updated dist.ini and began build testing.
-    * Began documentation.
-    * Converted to Class::Std

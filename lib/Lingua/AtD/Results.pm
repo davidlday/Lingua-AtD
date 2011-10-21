@@ -1,9 +1,9 @@
 package Lingua::AtD::Results;
-# ABSTRACT: Encapsulates the Results response from a call to AtD.
+# ABSTRACT: Encapsulate conversion of XML from /checkDocument or /checkGrammar call to Error objects.
 use strict;
 use warnings;
 use Carp;
-use XML::XPath;
+use XML::LibXML;
 use Lingua::AtD::Error;
 use Class::Std;
 
@@ -18,39 +18,35 @@ use Class::Std;
         my ($self, $ident, $arg_ref) = @_;
         my @atd_errors = ();
 
-        my $xp = XML::XPath->new( xml => $arg_ref->{xml} );
-        my $nodeset = $xp->findnodes('//error');
-        foreach my $node ( $nodeset->get_nodelist ) {
+        my $parser = XML::LibXML->new();
+        my $dom    = $parser->load_xml( string => $arg_ref->{xml} );
+
+        # Check for server message.
+        # For now, tuck it away as an attribute. In theory, there's only one message.
+        if ( $dom->exists('/results/message') ) {
+            $server_message_of{$ident} = $dom->findvalue('/results/message');
+            # TODO - Throw an exception. This message means the server had issues.
+        }
+
+        foreach my $error_node ($dom->findnodes('/results/error')) {
             my @options = ();
-            my $option_nodeset = $node->findvalue('option');
-            foreach my $option_node ( $option_nodeset->get_nodelist ) {
-                push(@options, $option_node->string_value); # TODO - Get values!
+            foreach my $option_node ($error_node->findnodes('./suggestions/option')) {
+                push(@options, $option_node->string_value);
             }
+            my $url = ($error_node->exists('url')) ? $error_node->findvalue('url') : undef;
             my $atd_error   = Lingua::AtD::Error->new(
                 {
-                    string   => $node->findvalue('string'),
-                    description  => $node->findvalue('description'),
-                    precontext  => $node->findvalue('precontext'),
+                    string   => $error_node->findvalue('string'),
+                    description  => $error_node->findvalue('description'),
+                    precontext  => $error_node->findvalue('precontext'),
                     suggestions => [@options],
-                    type  => $node->findvalue('type'),
-                    url  => $node->findvalue('url')
+                    type  => $error_node->findvalue('type'),
+                    url  => $url
                 }
             );
             push( @atd_errors, $atd_error );
         }
         $errors_of{$ident} = [@atd_errors];
-
-        # Check for server message.
-        # TODO - Throw an exception. This message means the server had issues.
-        # For now, tuck it away as an attribute. In theory, there's only one message.
-        #~ if ( defined( $results->{message} ) ) {
-            #~ $server_message_of{$ident} = $results->{message};
-        #~ }
-#~ 
-        #~ foreach my $xml_error ( @{ $results->{error} } ) {
-            #~ my $atd_error = Lingua::AtD::Error->new($xml_error);
-            #~ push( @atd_errors, $atd_error );
-        #~ }
 
         return;
     }

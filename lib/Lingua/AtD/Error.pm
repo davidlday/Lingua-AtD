@@ -13,14 +13,14 @@ use Class::Std;
     my %precontext_of   :ATTR( :init_arg<precontext> :get<precontext> );
     my %suggestions_of  :ATTR();
     my %type_of         :ATTR( :init_arg<type> :get<type> );
-    my %url_of          :ATTR( :get<url> :default() );
+    my %url_of          :ATTR( :get<url> );
 
     sub BUILD {
         my ($self, $ident, $arg_ref) = @_;
 
         # Special cases. Both are optional, suggestions is an array.
-        $suggestions_of{$ident} = $arg_ref->{suggestions} if defined($arg_ref->{suggestions});
-        $url_of{$ident}         = $arg_ref->{url} if defined($arg_ref->{url});
+        $suggestions_of{$ident} = $arg_ref->{suggestions} if ( defined($arg_ref->{suggestions}) );
+        $url_of{$ident}         = $arg_ref->{url} if ( defined($arg_ref->{url}) && length($arg_ref->{url} > 0) );
 
         return;
     }

@@ -8,7 +8,6 @@ use Class::Std::Utils;
 use LWP::UserAgent;
 use Lingua::AtD::Results;
 use Lingua::AtD::Scores;
-use Data::Dumper;
 
 {
 

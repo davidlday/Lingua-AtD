@@ -1,10 +1,9 @@
 package Lingua::AtD::Scores;
-# ABSTRACT: Encapsulates the Scores response from a call to AtD.
+# ABSTRACT: Encapsulate conversion of XML from /stats call to Metric objects.
 use strict;
 use warnings;
 use Carp;
-#use XML::LibXML;
-use XML::XPath;
+use XML::LibXML;
 use Lingua::AtD::Metric;
 use Class::Std;
 
@@ -19,14 +18,21 @@ use Class::Std;
         my ($self, $ident, $arg_ref) = @_;
         my @atd_metrics = ();
 
-        my $xp = XML::XPath->new( xml => $arg_ref->{xml} );
-        my $nodeset = $xp->findnodes('//metric');
-        foreach my $node ( $nodeset->get_nodelist ) {
+        my $parser = XML::LibXML->new();
+        my $dom    = $parser->load_xml( string => $arg_ref->{xml} );
+
+        # Check for server message. Not sure if stats will do this.
+        # For now, tuck it away as an attribute. In theory, there's only one message.
+        if ( $dom->exists('/scores/message') ) {
+            $server_message_of{$ident} = $dom->findvalue('/scores/message');
+            # TODO - Throw an exception. This message means the server had issues.
+        }
+        foreach my $metric_node ($dom->findnodes('/scores/metric')) {
             my $atd_metric   = Lingua::AtD::Metric->new(
                 {
-                    key   => $node->findvalue('key'),
-                    type  => $node->findvalue('type'),
-                    value => $node->findvalue('value')
+                    key   => $metric_node->findvalue('key'),
+                    type  => $metric_node->findvalue('type'),
+                    value => $metric_node->findvalue('value')
                 }
             );
             push( @atd_metrics, $atd_metric );
