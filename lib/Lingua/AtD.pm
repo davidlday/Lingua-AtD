@@ -45,7 +45,10 @@ use URI;
         if ( $response->is_error() ) {
             croak(
                 Lingua::AtD::HTTPException->new(
-                    { http_status => $res->status_line, service_url => $url }
+                    {
+                        http_status => $response->status_line,
+                        service_url => $url
+                    }
                 )
             );
         }

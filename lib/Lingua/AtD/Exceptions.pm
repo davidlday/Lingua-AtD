@@ -1,8 +1,6 @@
 package Lingua::AtD::Exceptions;
 
 # ABSTRACT: Exception classes for Lingua::AtD
-use strict;
-use warnings;
 use Exception::Class (
     Lingua::AtD::URLException => {
         fields      => [ 'url', 'host', 'port' ],
@@ -11,10 +9,11 @@ use Exception::Class (
     Lingua::AtD::HTTPException => {
         fields => [ 'http_status', 'service_url' ],
         description => 'Indicates a problem connecting to the AtD service.'
-      } Lingua::AtD::ServiceException => {
+    },
+    Lingua::AtD::ServiceException => {
         fields      => ['service_message'],
         description => 'Indicates the AtD service returned an error message.'
-      }
+    }
 );
 
 1;    # Magic true value required at end of module
