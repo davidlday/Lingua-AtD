@@ -38,7 +38,7 @@ use Class::Std;
                 {
                     key   => $metric_node->findvalue('key'),
                     type  => $metric_node->findvalue('type'),
-                    value => $metric_node->findvalue('value')
+                    value => $metric_node->findvalue('value'),
                 }
             );
             push( @atd_metrics, $atd_metric );
@@ -76,35 +76,35 @@ __END__
     # Create a new service proxy
     my $atd = Lingua::AtD->new( {
         host => 'service.afterthedeadline.com',
-        port => 80
+        port => 80,
     });
 
     # Run spelling and grammar checks. Returns a Lingua::AtD::Response object.
-    my $response = $atd->check_document('Text to check.');
+    my $atd_response = $atd->check_document('Text to check.');
     # Loop through reported document errors.
-    foreach my $atd_error ($response->get_errors()) {
+    foreach my $atd_error ($atd_response->get_errors()) {
         # Do something with...
         print "Error string: ", $atd_error->get_string(), "\n";
     }
     
     # Run only grammar checks. Essentially the same as 
     # check_document(), sans spell-check.
-    my $response = $atd->check_grammar('Text to check.');
+    my $atd_response = $atd->check_grammar('Text to check.');
     # Loop through reported document errors.
-    foreach my $atd_error ($response->get_errors()) {
+    foreach my $atd_error ($atd_response->get_errors()) {
         # Do something with...
         print "Error string: ", $atd_error->get_string(), "\n";
     }
     
     # Get statistics on a document. Returns a Lingua::AtD::Scores object.
-    my $scores = $atd->stats('Text to check.');
+    my $atd_scores = $atd->stats('Text to check.');
     # Loop through reported document errors.
-    foreach my $atd_metric ($response->get_metrics()) {
+    foreach my $atd_metric ($atd_scores->get_metrics()) {
         # Do something with...
         print $atd_metric->get_type(), "/", $atd_metric->get_key(), 
             " = ", $atd_metric->get_value(), "\n";
     }
-    
+
 =head1 DESCRIPTION
 
 Encapsulates conversion of the XML response from the AtD server into a list of spelling/grammar/style metric objects (L<Lingua::AtD::Metric>).

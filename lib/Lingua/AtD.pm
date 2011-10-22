@@ -47,7 +47,7 @@ use URI;
                 Lingua::AtD::HTTPException->new(
                     {
                         http_status => $response->status_line,
-                        service_url => $url
+                        service_url => $url,
                     }
                 )
             );
@@ -97,31 +97,31 @@ __END__
     });
 
     # Run spelling and grammar checks. Returns a Lingua::AtD::Response object.
-    my $response = $atd->check_document('Text to check.');
+    my $atd_response = $atd->check_document('Text to check.');
     # Loop through reported document errors.
-    foreach my $atd_error ($response->get_errors()) {
+    foreach my $atd_error ($atd_response->get_errors()) {
         # Do something with...
         print "Error string: ", $atd_error->get_string(), "\n";
     }
     
     # Run only grammar checks. Essentially the same as 
     # check_document(), sans spell-check.
-    my $response = $atd->check_grammar('Text to check.');
+    my $atd_response = $atd->check_grammar('Text to check.');
     # Loop through reported document errors.
-    foreach my $atd_error ($response->get_errors()) {
+    foreach my $atd_error ($atd_response->get_errors()) {
         # Do something with...
         print "Error string: ", $atd_error->get_string(), "\n";
     }
     
     # Get statistics on a document. Returns a Lingua::AtD::Scores object.
-    my $scores = $atd->stats('Text to check.');
+    my $atd_scores = $atd->stats('Text to check.');
     # Loop through reported document errors.
-    foreach my $atd_metric ($response->get_metrics()) {
+    foreach my $atd_metric ($atd_scores->get_metrics()) {
         # Do something with...
         print $atd_metric->get_type(), "/", $atd_metric->get_key(), 
             " = ", $atd_metric->get_value(), "\n";
     }
-    
+
 =head1 DESCRIPTION
 
 Lingua::AtD provides an OO-style interface for After the Deadline's grammar and spell checking services.

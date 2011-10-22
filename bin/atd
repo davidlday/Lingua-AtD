@@ -10,6 +10,7 @@ use Getopt::Long;
 use IO::File;
 use Cwd 'abs_path';
 
+# ABSTRACT: Command Line Interface for Lingua::AtD
 my $file           = "";
 my $check_document = "";
 my $stats          = "";
