@@ -1,0 +1,85 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+#use LWP::UserAgent;
+#use XML::LibXML;
+#use XML::XPath;
+use Lingua::AtD;
+#use Data::Dumper;
+use Getopt::Long;
+use IO::File;
+use Cwd 'abs_path';
+
+my $file           = "";
+my $check_document = "";
+my $stats          = "";
+my $check_grammar  = "";
+my $host           = "service.afterthedeadline.com";
+my $port           = "80";
+my $debug          = undef;
+
+my $result = GetOptions(
+    "file=s"  => \$file,
+    "check"   => \$check_document,
+    "stats"   => \$stats,
+    "grammar" => \$check_grammar,
+    "host=s"  => \$host,
+    "port=s"  => \$port,
+    "debug"   => \$debug
+);
+
+# Get absolute path to input file
+$file = abs_path($file);
+
+# Slurp up file
+my $fh = IO::File->new("< $file");
+my $fh_text = join( '', <$fh> );
+
+my $atd = Lingua::AtD->new( { host => $host, port => $port } );
+print "Service URL: ", $atd->get_service_url(), "\n";
+
+#my $atd = Lingua::AtD->new();
+
+if ( $check_document || $check_grammar ) {
+    my $response;
+    if ($check_document) {
+        $response = $atd->check_document($fh_text);
+    }
+    elsif ($check_grammar) {
+        $response = $atd->check_grammar($fh_text);
+    }
+    print "Server Message: '", $response->get_server_exception, "'\n"
+      if ( $response->has_server_exception );
+    if ($debug) {
+        print "Raw XML\n", $response->get_xml(), "\n";
+    }
+    else {
+        print "Error Objects:\n";
+        foreach my $atd_error ( $response->get_errors() ) {
+            print "\t ", $atd_error->get_description(), " (",
+              $atd_error->get_precontext(), " *", $atd_error->get_string(),
+              "*)\n";
+            print "\t\t* See: '", $atd_error->get_url('tinymce'), "'\n"
+              if ( $atd_error->has_url() );
+            if ( $atd_error->has_suggestions() ) {
+                foreach my $option ( $atd_error->get_suggestions() ) {
+                    print "\t\t* Suggest: ", $option, "\n";
+                }
+            }
+        }
+    }
+}
+elsif ($stats) {
+    my $response = $atd->stats($fh_text);
+    foreach my $metric ( $response->get_metrics() ) {
+        my $type = $metric->get_type();
+        my $key  = $metric->get_key();
+
+        #$key ~= s/\s/_/g;
+        my $value = $metric->get_value();
+        print "$type.$key=$value\n";
+    }
+}
+
+print "\nAPI Key: ",   $atd->get_api_key(),     "\n";
+print "Service URL: ", $atd->get_service_url(), "\n";
