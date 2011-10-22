@@ -6,6 +6,7 @@ use warnings;
 use Carp;
 use XML::LibXML;
 use Lingua::AtD::Error;
+use Lingua::AtD::Exceptions;
 use Class::Std;
 
 {
@@ -22,12 +23,14 @@ use Class::Std;
         my $parser = XML::LibXML->new();
         my $dom = $parser->load_xml( string => $xml_of{$ident} );
 
-   # Check for server message.
-   # For now, tuck it away as an attribute. In theory, there's only one message.
+        # Check for server message.
         if ( $dom->exists('/results/message') ) {
             $server_message_of{$ident} = $dom->findvalue('/results/message');
-
-          # TODO - Throw an exception. This message means the server had issues.
+            croak(
+                Lingua::AtD::ServiceException->new(
+                    { server_message => $server_message_of{$ident} }
+                )
+            );
         }
 
         foreach my $error_node ( $dom->findnodes('/results/error') ) {

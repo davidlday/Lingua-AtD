@@ -6,6 +6,7 @@ use warnings;
 use Carp;
 use XML::LibXML;
 use Lingua::AtD::Metric;
+use Lingua::AtD::Exceptions;
 use Class::Std;
 
 {
@@ -22,13 +23,16 @@ use Class::Std;
         my $parser = XML::LibXML->new();
         my $dom = $parser->load_xml( string => $xml_of{$ident} );
 
-   # Check for server message. Not sure if stats will do this.
-   # For now, tuck it away as an attribute. In theory, there's only one message.
-        if ( $dom->exists('/scores/message') ) {
-            $server_message_of{$ident} = $dom->findvalue('/scores/message');
-
-          # TODO - Throw an exception. This message means the server had issues.
+        # Check for server message. Not sure if stats will do this.
+        if ( $dom->exists('/results/message') ) {
+            $server_message_of{$ident} = $dom->findvalue('/results/message');
+            croak(
+                Lingua::AtD::ServiceException->new(
+                    { server_message => $server_message_of{$ident} }
+                )
+            );
         }
+
         foreach my $metric_node ( $dom->findnodes('/scores/metric') ) {
             my $atd_metric = Lingua::AtD::Metric->new(
                 {

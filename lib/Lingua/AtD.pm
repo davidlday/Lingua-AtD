@@ -8,6 +8,8 @@ use Class::Std;
 use LWP::UserAgent;
 use Lingua::AtD::Results;
 use Lingua::AtD::Scores;
+use Lingua::AtD::Exceptions;
+use URI;
 
 {
 
@@ -40,8 +42,14 @@ use Lingua::AtD::Scores;
         $ua->agent( 'AtD Perl Module/' . $Lingua::AtD::VERSION );
 
         my $response = $ua->post( $url, Content => [ %{$arg_ref} ] );
+        if ( $response->is_error() ) {
+            croak(
+                Lingua::AtD::HTTPException->new(
+                    { http_status => $res->status_line, service_url => $url }
+                )
+            );
+        }
 
-        #TODO - Add some error checking for the response and throw exceptions.
         return $response->content;
     }
 
