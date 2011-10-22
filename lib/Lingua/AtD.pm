@@ -1,4 +1,5 @@
 package Lingua::AtD;
+
 # ABSTRACT: Provides an OO wrapper for After the Deadline grammar and spelling service.
 use strict;
 use warnings;
@@ -11,16 +12,22 @@ use Lingua::AtD::Scores;
 {
 
     # Attributes
-    my %api_key_of      :ATTR( :init_arg<api_key> :get<api_key> :default<'Lingua-AtD'> );
-    my %service_host_of :ATTR( :init_arg<host>    :get<service_host> :default<'service.afterthedeadline.com'> );
-    my %service_port_of :ATTR( :init_arg<port>    :get<service_port> :default<80> );
-    my %service_url_of  :ATTR( :get<service_url> );
+    my %api_key_of :
+      ATTR( :init_arg<api_key> :get<api_key> :default<'Lingua-AtD'> );
+    my %service_host_of :
+      ATTR( :init_arg<host>    :get<service_host> :default<'service.afterthedeadline.com'> );
+    my %service_port_of :
+      ATTR( :init_arg<port>    :get<service_port> :default<80> );
+    my %service_url_of : ATTR( :get<service_url> );
 
     sub START {
-        my ($self, $ident, $arg_ref) = @_;
+        my ( $self, $ident, $arg_ref ) = @_;
 
         # Construct the URL
-        $service_url_of{$ident} = 'http://' . $service_host_of{$ident} . ':' . $service_port_of{$ident} . '/';
+        $service_url_of{$ident} =
+            'http://'
+          . $service_host_of{$ident} . ':'
+          . $service_port_of{$ident} . '/';
 
         return;
     }
@@ -65,7 +72,7 @@ use Lingua::AtD::Scores;
     }
 }
 
-1; # Magic true value required at end of module
+1;    # Magic true value required at end of module
 __END__
 
 =head1 SYNOPSIS
@@ -132,6 +139,8 @@ Host for the AtD service. Defaults to the public host: I<service.afterthedeadlin
 
 Port for the AtD service. Defaults to the standard http port: I<80>. AtD's software is open source, and it's entirely possible to download and set up your own private AtD service. See the L<AtD Project website|http://open.afterthedeadline.com/> for details.
 
+=back
+
 =method get_api_key
 
     $atd->get_api_key();
@@ -155,7 +164,6 @@ Returns the port of the AtD service.
     $atd->get_service();
     
 Returns a formatted URL for the AtD service.
-
 
 =method check_document
 
@@ -190,6 +198,10 @@ No known bugs.
 Wouldn't it be kind of funny if I had a ton of spelling/grammar/style errors in my documentation? Yeah, it would. And I bet there are. Shame on my for not running my documentation through my own module.
 
 =head1 SEE ALSO
+
+=for :list
+* L<Your::Module>
+* L<Your::Package>
 
 See the L<API Documentation|http://www.afterthedeadline.com/api.slp> at After the Deadline's website.
 

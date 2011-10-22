@@ -1,4 +1,5 @@
 package Lingua::AtD::Error;
+
 # ABSTRACT: Encapsulates the Errors contained in Results.
 use strict;
 use warnings;
@@ -8,19 +9,21 @@ use Class::Std;
 {
 
     # Attributes
-    my %string_of       :ATTR( :init_arg<string> :get<string>  );
-    my %description_of  :ATTR( :init_arg<description> :get<description>  );
-    my %precontext_of   :ATTR( :init_arg<precontext> :get<precontext> );
-    my %suggestions_of  :ATTR();
-    my %type_of         :ATTR( :init_arg<type> :get<type> );
-    my %url_of          :ATTR( :get<url> );
+    my %string_of : ATTR( :init_arg<string> :get<string>  );
+    my %description_of : ATTR( :init_arg<description> :get<description>  );
+    my %precontext_of : ATTR( :init_arg<precontext> :get<precontext> );
+    my %suggestions_of : ATTR();
+    my %type_of : ATTR( :init_arg<type> :get<type> );
+    my %url_of : ATTR( :get<url> );
 
     sub BUILD {
-        my ($self, $ident, $arg_ref) = @_;
+        my ( $self, $ident, $arg_ref ) = @_;
 
         # Special cases. Both are optional, suggestions is an array.
-        $suggestions_of{$ident} = $arg_ref->{suggestions} if ( defined($arg_ref->{suggestions}) );
-        $url_of{$ident}         = $arg_ref->{url} if ( defined($arg_ref->{url}) && length($arg_ref->{url} > 0) );
+        $suggestions_of{$ident} = $arg_ref->{suggestions}
+          if ( defined( $arg_ref->{suggestions} ) );
+        $url_of{$ident} = $arg_ref->{url}
+          if ( defined( $arg_ref->{url} ) && length( $arg_ref->{url} > 0 ) );
 
         return;
     }
@@ -47,7 +50,7 @@ use Class::Std;
 
 }
 
-1; # Magic true value required at end of module
+1;    # Magic true value required at end of module
 __END__
 
 =head1 SYNOPSIS
