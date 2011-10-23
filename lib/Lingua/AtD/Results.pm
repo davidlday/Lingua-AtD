@@ -1,6 +1,4 @@
 package Lingua::AtD::Results;
-
-# ABSTRACT: Encapsulate conversion of XML from /checkDocument or /checkGrammar call to Error objects.
 use strict;
 use warnings;
 use Carp;
@@ -8,6 +6,8 @@ use XML::LibXML;
 use Lingua::AtD::Error;
 use Lingua::AtD::Exceptions;
 use Class::Std;
+
+# ABSTRACT: Encapsulate conversion of XML from /checkDocument or /checkGrammar call to Error objects.
 
 {
 
@@ -26,11 +26,9 @@ use Class::Std;
         # Check for server message.
         if ( $dom->exists('/results/message') ) {
             $server_message_of{$ident} = $dom->findvalue('/results/message');
-            croak(
-                Lingua::AtD::ServiceException->new(
-                    { server_message => $server_message_of{$ident} }
-                )
-            );
+            Lingua::AtD::ServiceException->throw(
+                    { service_message => $server_message_of{$ident} }
+                );
         }
 
         foreach my $error_node ( $dom->findnodes('/results/error') ) {

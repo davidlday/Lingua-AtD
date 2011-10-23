@@ -1,6 +1,4 @@
 package Lingua::AtD::Scores;
-
-# ABSTRACT: Encapsulate conversion of XML from /stats call to Metric objects.
 use strict;
 use warnings;
 use Carp;
@@ -8,6 +6,8 @@ use XML::LibXML;
 use Lingua::AtD::Metric;
 use Lingua::AtD::Exceptions;
 use Class::Std;
+
+# ABSTRACT: Encapsulate conversion of XML from /stats call to Metric objects.
 
 {
 
@@ -26,11 +26,9 @@ use Class::Std;
         # Check for server message. Not sure if stats will do this.
         if ( $dom->exists('/results/message') ) {
             $server_message_of{$ident} = $dom->findvalue('/results/message');
-            croak(
-                Lingua::AtD::ServiceException->new(
+            Lingua::AtD::ServiceException->throw(
                     { server_message => $server_message_of{$ident} }
-                )
-            );
+                );
         }
 
         foreach my $metric_node ( $dom->findnodes('/scores/metric') ) {

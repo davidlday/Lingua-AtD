@@ -1,6 +1,4 @@
 package Lingua::AtD;
-
-# ABSTRACT: Provides an OO wrapper for After the Deadline grammar and spelling service.
 use strict;
 use warnings;
 use Carp;
@@ -10,6 +8,8 @@ use Lingua::AtD::Results;
 use Lingua::AtD::Scores;
 use Lingua::AtD::Exceptions;
 use URI;
+
+# ABSTRACT: Provides an OO wrapper for After the Deadline grammar and spelling service.
 
 {
 
@@ -43,13 +43,11 @@ use URI;
 
         my $response = $ua->post( $url, Content => [ %{$arg_ref} ] );
         if ( $response->is_error() ) {
-            croak(
-                Lingua::AtD::HTTPException->new(
-                    {
-                        http_status => $response->status_line,
-                        service_url => $url,
-                    }
-                )
+            Lingua::AtD::HTTPException->throw(
+                {
+                    http_status => $response->status_line,
+                    service_url => $url,
+                }
             );
         }
 
