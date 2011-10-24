@@ -26,7 +26,8 @@ use Class::Std;
         # Check for server message.
         if ( $dom->exists('/results/message') ) {
             $server_message_of{$ident} = $dom->findvalue('/results/message');
-            Lingua::AtD::ServiceException->throw( service_message => $server_message_of{$ident} );
+            Lingua::AtD::ServiceException->throw(
+                service_message => $server_message_of{$ident} );
         }
 
         foreach my $error_node ( $dom->findnodes('/results/error') ) {

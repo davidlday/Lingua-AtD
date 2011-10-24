@@ -23,7 +23,7 @@ use Class::Std;
         $suggestions_of{$ident} = $arg_ref->{suggestions}
           if ( defined( $arg_ref->{suggestions} ) );
         $url_of{$ident} = $arg_ref->{url}
-          if ( defined( $arg_ref->{url} ) && length( $arg_ref->{url} ) > 0  );
+          if ( defined( $arg_ref->{url} ) && length( $arg_ref->{url} ) > 0 );
 
         return;
     }

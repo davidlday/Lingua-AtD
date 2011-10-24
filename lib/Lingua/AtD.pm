@@ -39,13 +39,13 @@ use URI;
         my $ident = ident($self);
         my $url   = $service_url_of{$ident} . $verb;
         my $ua    = LWP::UserAgent->new();
-        $ua->agent( 'AtD Perl Module/' . $Lingua::AtD::VERSION );
+        $ua->agent( 'Lingua::AtD/' . $Lingua::AtD::VERSION );
 
         my $response = $ua->post( $url, Content => [ %{$arg_ref} ] );
         if ( $response->is_error() ) {
             Lingua::AtD::HTTPException->throw(
-                    http_status => $response->status_line,
-                    service_url => $url,
+                http_status => $response->status_line,
+                service_url => $url,
             );
         }
 

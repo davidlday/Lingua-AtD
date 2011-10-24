@@ -26,7 +26,8 @@ use Class::Std;
         # Check for server message. Not sure if stats will do this.
         if ( $dom->exists('/results/message') ) {
             $server_message_of{$ident} = $dom->findvalue('/results/message');
-            Lingua::AtD::ServiceException->throw( service_message => $server_message_of{$ident} );
+            Lingua::AtD::ServiceException->throw(
+                service_message => $server_message_of{$ident} );
         }
 
         foreach my $metric_node ( $dom->findnodes('/scores/metric') ) {
