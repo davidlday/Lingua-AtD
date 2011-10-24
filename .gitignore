@@ -5,5 +5,15 @@
 # *.[oa]
 # *~
 # I use a local build directory for dzil
-build/*
+Lingua-AtD-*
+build
 .build
+
+# avoid temp and backup files
+*~
+*#
+*.bak
+*.old
+*.rej
+*.swp
+*.tmp
