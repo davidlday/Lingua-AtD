@@ -9,7 +9,7 @@ use Exception::Class (
         description => 'Indicates a problem connecting to the AtD service.',
     },
     Lingua::AtD::ServiceException => {
-        fields      => 'service_message',
+        fields      => [ 'service_message' ],
         description => 'Indicates the AtD service returned an error message.',
     },
 );
