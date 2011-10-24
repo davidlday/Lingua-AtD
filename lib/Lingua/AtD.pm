@@ -44,10 +44,8 @@ use URI;
         my $response = $ua->post( $url, Content => [ %{$arg_ref} ] );
         if ( $response->is_error() ) {
             Lingua::AtD::HTTPException->throw(
-                {
                     http_status => $response->status_line,
                     service_url => $url,
-                }
             );
         }
 
