@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+1.112980  2011-10-25 12:18:11 EST
     * Finished and corrected documentation.
     * Updated 01-sanity-atd.t to use 500.500.500 as hostname. Prevents
       timout issues from services such as OpenDNS trying to nicely
