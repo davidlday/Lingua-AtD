@@ -130,7 +130,7 @@ Encapsulates conversion of the XML response from the AtD server into a list of s
     
 Lingua::AtD::Results objects should only ever be created from method calls to L<Lingua::AtD>. However, if you have saved XML responses from prior calls to AtD, you can use this object to convert those responses into PERL objects. I won't stop you.
 
-See the L<DESCRIPTION> for typical usage.
+See the L<SYNOPSIS> for typical usage.
 
 =method has_server_exception
 

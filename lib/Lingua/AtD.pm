@@ -182,7 +182,7 @@ From the L<API Documentation|http://www.afterthedeadline.com/api.slp>: I<Checks 
 
 =method check_grammar
 
-    $atd_results = $atd->check_document('Some text stringg in badd nneed of prufreding.');
+    $atd_results = $atd->check_grammar('Some text stringg in badd nneed of prufreding.');
     
 Invokes the grammar check service for some string of text and return a L<Lingua::AtD::Results> object. This differs from I<check_document> in that it only checks grammar and style, not spelling.
 
@@ -202,7 +202,7 @@ No known bugs.
 
 =head1 IRONY
 
-Wouldn't it be kind of funny if I had a ton of spelling/grammar/style errors in my documentation? Yeah, it would. And I bet there are. Shame on my for not running my documentation through my own module.
+Wouldn't it be kind of funny if I had a ton of spelling/grammar/style errors in my documentation? Yeah, it would. And I bet there are. Shame on me for not running my documentation through my own module.
 
 =head1 SEE ALSO
 

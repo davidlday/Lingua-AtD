@@ -4,7 +4,7 @@ use warnings;
 use Carp;
 use Class::Std;
 
-# ABSTRACT: Encapsulates the Metrics contained in Scores.
+# ABSTRACT: Encapsulates the grammar/spelling/style/statistical Metrics contained in Scores.
 
 {
 
@@ -56,6 +56,28 @@ __END__
 
 =head1 DESCRIPTION
 
-<description>
+Encapsulates the grammar/spelling/style/statistical Metrics contained in Scores.
 
 =head1 METHODS
+
+=method get_type
+
+    $atd_metric->get_type();
+
+Returns a string indicating the type of metric. One of I<grammar>, I<spell>, I<style>, or I<stats>.
+
+=method get_key
+
+    $atd_metric->get_key();
+
+Returns a string indicating the metric key. From the L<API Documentation|http://www.afterthedeadline.com/api.slp>: I<The type is a category to add some organization to the information.>
+
+=method get_value
+
+    $atd_metric-The type is a category to add some organization to the information.>get_value();
+
+Returns the numeric value of the metric.
+
+=head1 SEE ALSO
+
+See the L<API Documentation|http://www.afterthedeadline.com/api.slp> at After the Deadline's website.
