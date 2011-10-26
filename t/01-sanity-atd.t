@@ -39,9 +39,9 @@ is(
     'Indicates a problem connecting to the AtD service.',
     'description() [exception]'
 );
-is(
+like_ok(
     $atd_exception->http_status,
-    "500 Can't connect to 500.500.500:200200 (Bad hostname)",
+    qr/^500 Can't connect to 500.500.500:200200/,
     'http_status() [exception]'
 );
 is(
