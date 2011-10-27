@@ -39,7 +39,7 @@ is(
     'Indicates a problem connecting to the AtD service.',
     'description() [exception]'
 );
-like_ok(
+like(
     $atd_exception->http_status,
     qr/^500 Can't connect to 500.500.500:200200/,
     'http_status() [exception]'
