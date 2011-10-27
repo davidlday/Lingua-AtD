@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+1.113000  2011-10-26 20:12:33 EST
     * More corrections to 01-sanity-atd.t to prevent false failures
       while testing for LWP exceptions.
 
