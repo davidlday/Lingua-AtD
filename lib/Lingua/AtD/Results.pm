@@ -153,6 +153,10 @@ Exception message from the server.
 
 Convenience method to see if the XML response from AtD actually contained any spelling/grammar/style errors. These are not exceptions (see L<get_server_exception>). These are expected, and in fact are what you've asked for.
 
+=method get_error_count
+
+Returns the number of spelling/grammar/style errors detected.
+
 =method get_errors
 
 Returns a list of spelling/grammar/style errors as L<Lingua::AtD::Error> objects.

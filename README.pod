@@ -40,7 +40,9 @@
 
 Lingua::AtD provides an OO-style interface for After the Deadline's grammar and spell checking services.
 
-=method new
+=head1 METHODS
+
+=item new
 
 This constructor takes four arguments, all optional. The sample below shows the defaults.
 
@@ -71,43 +73,43 @@ There's no API documentation stating such, but testing has shown that AtD servic
 
 =back
 
-=method get_api_key
+=item get_api_key
 
     $atd->get_api_key();
 
 Returns the API Key used to access the AtD service.
 
-=method get_host
+=item get_host
 
     $atd->get_host();
 
 Returns the host of the AtD service.
 
-=method get_port
+=item get_port
 
     $atd->get_port();
 
 Returns the port of the AtD service.
 
-=method get_service_url
+=item get_service_url
 
     $atd->get_service();
 
 Returns a formatted URL for the AtD service.
 
-=method get_throttle
+=item get_throttle
 
     $atd->get_throttle();
 
 Returns the number of seconds that must pass between calls to the AtD service.
 
-=method set_throttle
+=item set_throttle
 
     $atd->set_throttle(3);
 
 Sets the number of seconds that must pass between calls to the AtD service.
 
-=method check_document
+=item check_document
 
     $atd_results = $atd->check_document('Some text stringg in badd nneed of prufreding.');
 
@@ -115,7 +117,7 @@ Invokes the document check service for some string of text and return a L<Lingua
 
 From the L<API Documentation|http://www.afterthedeadline.com/api.slp>: I<Checks a document and returns errors and suggestions>
 
-=method check_grammar
+=item check_grammar
 
     $atd_results = $atd->check_grammar('Some text stringg in badd nneed of prufreding.');
 
@@ -123,7 +125,7 @@ Invokes the grammar check service for some string of text and return a L<Lingua:
 
 From the L<API Documentation|http://www.afterthedeadline.com/api.slp>: I<Checks a document (sans spelling) returns errors and suggestions>
 
-=method stats
+=item stats
 
     $atd_scores = $atd->stats('Some text stringg in badd nneed of prufreding.');
 
