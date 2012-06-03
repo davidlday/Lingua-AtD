@@ -6,6 +6,7 @@ use Class::Std;
 use LWP::UserAgent;
 use Lingua::AtD::Results;
 use Lingua::AtD::Scores;
+
 #use Lingua::AtD::Exceptions;
 use URI;
 
@@ -18,8 +19,7 @@ use URI;
       ATTR( :init_arg<api_key> :get<api_key> :default<'Lingua-AtD'> );
     my %throttle_of :
       ATTR( :init_arg<throttle> :get<throttle> :set<throttle> :default<1> );
-    my %last_call_of :
-      ATTR( :get<last_call> :default<0> );
+    my %last_call_of : ATTR( :get<last_call> :default<0> );
     my %service_host_of :
       ATTR( :init_arg<host>    :get<service_host> :default<'service.afterthedeadline.com'> );
     my %service_port_of :
@@ -36,10 +36,8 @@ use URI;
           . $service_port_of{$ident} . '/';
 
         # Generate API Key
-        my $rand_hex =
-            join "", map { unpack "H*", chr(rand(256)) } 1..16;
-        $api_key_of{$ident} =
-            "Lingua-AtD-$rand_hex";
+        my $rand_hex = join "", map { unpack "H*", chr( rand(256) ) } 1 .. 16;
+        $api_key_of{$ident} = "Lingua-AtD-$rand_hex";
 
         return;
     }
@@ -52,23 +50,23 @@ use URI;
         $ua->agent( 'Lingua::AtD/' . $Lingua::AtD::VERSION );
 
         # Throttle Calls. AtD throws a 503 if called too quickly.
-        my $remaining =
-            $throttle_of{$ident} - ( time - $last_call_of{$ident} );
-        sleep ( $remaining ) if ( $remaining > 0 );
+        my $remaining = $throttle_of{$ident} - ( time - $last_call_of{$ident} );
+        sleep($remaining) if ( $remaining > 0 );
 
         my $response = $ua->post( $url, Content => [ %{$arg_ref} ] );
 
         $last_call_of{$ident} = time;
 
         if ( $response->is_error() ) {
+
             # TODO: Implement Exceptions
-            my $msg = "'$url' responded with '"
-                . $response->status_line . "'.";
+            my $msg = "'$url' responded with '" . $response->status_line . "'.";
             croak $msg;
-#            Lingua::AtD::HTTPException->throw(
-#                http_status => $response->status_line,
-#                service_url => $url,
-#            );
+
+            #            Lingua::AtD::HTTPException->throw(
+            #                http_status => $response->status_line,
+            #                service_url => $url,
+            #            );
         }
 
         return $response->content;

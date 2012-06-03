@@ -18,21 +18,17 @@ is(
     'http://service.afterthedeadline.com:80/',
     ' get_service_url()'
 );
-is( $atd->get_throttle(), 1, ' get_throttle()' );
+is( $atd->get_throttle(),  1, ' get_throttle()' );
 is( $atd->set_throttle(2), 1, ' set_throttle()' );
 is( $atd->set_throttle(1), 2, ' set_throttle()' );
 
-my $atd_bogus =
-  Lingua::AtD->new( { host => '500.500.500', port => 200200 } );
+my $atd_bogus = Lingua::AtD->new( { host => '500.500.500', port => 200200 } );
 isa_ok( $atd_bogus, 'Lingua::AtD' );
 is( $atd_bogus->get_service_host(),
     '500.500.500', ' get_service_host() [bogus]' );
 is( $atd_bogus->get_service_port(), 200200, ' get_service_port() [bogus]' );
-is(
-    $atd_bogus->get_service_url(),
-    'http://500.500.500:200200/',
-    ' get_service_url() [bogus]'
-);
+is( $atd_bogus->get_service_url(),
+    'http://500.500.500:200200/', ' get_service_url() [bogus]' );
 is( $atd_bogus->get_throttle(), 1, ' get_throttle()' );
 
 # Exceptions removed for now.

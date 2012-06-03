@@ -62,7 +62,8 @@ use_ok('Lingua::AtD::Scores');
 my $atd_results = Lingua::AtD::Scores->new( { xml => $xml_good } );
 isa_ok( $atd_results, 'Lingua::AtD::Scores' );
 is( $atd_results->get_xml(), $xml_good, ' get_xml() [good]' );
-is( $atd_results->has_server_exception(), 0, ' has_service_exception() [good]' );
+is( $atd_results->has_server_exception(), 0,
+    ' has_service_exception() [good]' );
 is( $atd_results->get_server_exception(),
     undef, ' get_service_exception() [good]' );
 is( $atd_results->has_metrics(), 1, ' has_metrics() [good]' );

@@ -14,8 +14,7 @@ use Class::Std;
     # Attributes
     my %xml_of : ATTR( :init_arg<xml> :get<xml> );
     my %server_exception_of : ATTR( :get<server_exception> );
-    my %metric_count_of :
-        ATTR( :get<metric_count> :default<0> );
+    my %metric_count_of : ATTR( :get<metric_count> :default<0> );
     my %metrics_of : ATTR();
 
     sub START {
@@ -28,10 +27,12 @@ use Class::Std;
         # Check for server message. Not sure if stats will do this.
         if ( $dom->exists('/results/message') ) {
             $server_exception_of{$ident} = $dom->findvalue('/results/message');
+
             # TODO: Implement Exceptions
             croak $server_exception_of{$ident};
-#            Lingua::AtD::ServiceException->throw(
-#                service_message => $server_exception_of{$ident} );
+
+            #            Lingua::AtD::ServiceException->throw(
+            #                service_message => $server_exception_of{$ident} );
         }
 
         foreach my $metric_node ( $dom->findnodes('/scores/metric') ) {

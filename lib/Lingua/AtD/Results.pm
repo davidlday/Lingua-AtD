@@ -12,14 +12,10 @@ use Class::Std;
 {
 
     # Attributes
-    my %xml_of :
-        ATTR( :init_arg<xml> :get<xml> );
-    my %server_exception_of :
-        ATTR( :get<server_exception> );
-    my %error_count_of :
-        ATTR( :get<error_count> :default<0> );
-    my %errors_of :
-        ATTR();
+    my %xml_of : ATTR( :init_arg<xml> :get<xml> );
+    my %server_exception_of : ATTR( :get<server_exception> );
+    my %error_count_of : ATTR( :get<error_count> :default<0> );
+    my %errors_of : ATTR();
 
     sub START {
         my ( $self, $ident, $arg_ref ) = @_;
@@ -31,10 +27,12 @@ use Class::Std;
         # Check for server message.
         if ( $dom->exists('/results/message') ) {
             $server_exception_of{$ident} = $dom->findvalue('/results/message');
+
             # TODO: Implement Exceptions
             croak $server_exception_of{$ident};
-#            Lingua::AtD::ServiceException->throw(
-#                service_message => $server_exception_of{$ident} );
+
+            #            Lingua::AtD::ServiceException->throw(
+            #                service_message => $server_exception_of{$ident} );
         }
 
         foreach my $error_node ( $dom->findnodes('/results/error') ) {
@@ -73,7 +71,8 @@ use Class::Std;
 
     sub has_errors {
         my $self = shift;
-#        return defined( $errors_of{ ident($self) } ) ? 1 : 0;
+
+        #        return defined( $errors_of{ ident($self) } ) ? 1 : 0;
         return ( $error_count_of{ ident($self) } > 0 ) ? 1 : 0;
     }
 
