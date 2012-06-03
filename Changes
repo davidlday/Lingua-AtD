@@ -2,6 +2,15 @@ Revision history for {{$dist->name}}
 
 {{$NEXT}}
 
+1.121550  2012-06-02 19:41:25 EST
+    * Added 32 hex digits to API Key per AtD Documentation
+    * Added get_error_count() to Results.
+    * Fixes for Bug 77309:
+        * Added throttle & last_call properties to AtD. Seems the
+          service doesn't like being called less than two seconds apart.
+        * Replaced Exceptions with Carp. Exceptions will be implemented
+          in a later release.
+
 1.113000  2011-10-26 20:12:33 EST
     * More corrections to 01-sanity-atd.t to prevent false failures
       while testing for LWP exceptions.
@@ -11,6 +20,6 @@ Revision history for {{$dist->name}}
     * Updated 01-sanity-atd.t to use 500.500.500 as hostname. Prevents
       timout issues from services such as OpenDNS trying to nicely
       resolve bad hostnames.
-    
+
 1.112970  2011-10-23 22:00:00 EST
     * Original release
