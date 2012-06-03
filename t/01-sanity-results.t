@@ -2,7 +2,7 @@
 use Test::More;
 use Test::Exception;
 
-plan tests => 11;
+plan tests => 7;
 
 my $xml_good = '<?xml version="1.0"?>
 <results>
@@ -34,29 +34,31 @@ my $xml_exception = '<?xml version="1.0"?>
 use_ok('Lingua::AtD::Results');
 my $atd_results = Lingua::AtD::Results->new( { xml => $xml_good } );
 isa_ok( $atd_results, 'Lingua::AtD::Results' );
-is( $atd_results->get_xml, $xml_good, ' get_xml() [good]' );
-is( $atd_results->has_server_exception, 0, ' has_service_exception() [good]' );
-is( $atd_results->get_server_exception,
+is( $atd_results->get_xml(), $xml_good, ' get_xml() [good]' );
+is( $atd_results->has_server_exception(), 0, ' has_service_exception() [good]' );
+is( $atd_results->get_server_exception(),
     undef, ' get_service_exception() [good]' );
-is( $atd_results->has_errors, 1, ' has_errors() [good]' );
-is( $atd_results->get_errors, 2, ' get_errors() [good]' );
+is( $atd_results->has_errors(), 1, ' has_errors() [good]' );
+is( $atd_results->get_errors(), 2, ' get_errors() [good]' );
 
-throws_ok(
-    sub { Lingua::AtD::Results->new( { xml => $xml_exception } ) },
-    'Lingua::AtD::ServiceException',
-    'Service Exception thrown'
-);
-my $atd_exception = Exception::Class->caught('Lingua::AtD::ServiceException');
-isa_ok( $atd_exception, 'Lingua::AtD::ServiceException' );
-is(
-    $atd_exception->description,
-    'Indicates the AtD service returned an error message.',
-    'description() [exception]'
-);
-is(
-    $atd_exception->service_message,
-    'This is a description of what went wrong',
-    'service_message() [exception]'
-);
+# Exceptions removed for now.
+#throws_ok(
+#    sub { Lingua::AtD::Results->new( { xml => $xml_exception } ) },
+#    'Lingua::AtD::ServiceException',
+#    'Service Exception thrown'
+#);
+
+#my $atd_exception = Exception::Class->caught('Lingua::AtD::ServiceException');
+#isa_ok( $atd_exception, 'Lingua::AtD::ServiceException' );
+#is(
+#    $atd_exception->description(),
+#    'Indicates the AtD service returned an error message.',
+#    'description() [exception]'
+#);
+#is(
+#    $atd_exception->service_message(),
+#    'This is a description of what went wrong',
+#    'service_message() [exception]'
+#);
 
 done_testing;

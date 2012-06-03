@@ -56,7 +56,7 @@ __END__
 =head1 SYNOPSIS
 
     use Lingua::AtD;
-    
+
     # Create a new service proxy
     my $atd = Lingua::AtD->new( {
         host => 'service.afterthedeadline.com',
@@ -64,28 +64,28 @@ __END__
     });
 
     # Run spelling and grammar checks. Returns a Lingua::AtD::Response object.
-    my $atd_response = $atd->check_document('Text to check.');
+    my $doc_check = $atd->check_document('Text to check.');
     # Loop through reported document errors.
-    foreach my $atd_error ($atd_response->get_errors()) {
+    foreach my $atd_error ($doc_check->get_errors()) {
         # Do something with...
         print "Error string: ", $atd_error->get_string(), "\n";
     }
-    
-    # Run only grammar checks. Essentially the same as 
+
+    # Run only grammar checks. Essentially the same as
     # check_document(), sans spell-check.
-    my $atd_response = $atd->check_grammar('Text to check.');
+    my $grmr_check = $atd->check_grammar('Text to check.');
     # Loop through reported document errors.
-    foreach my $atd_error ($atd_response->get_errors()) {
+    foreach my $atd_error ($grmr_check->get_errors()) {
         # Do something with...
         print "Error string: ", $atd_error->get_string(), "\n";
     }
-    
+
     # Get statistics on a document. Returns a Lingua::AtD::Scores object.
     my $atd_scores = $atd->stats('Text to check.');
     # Loop through reported document errors.
     foreach my $atd_metric ($atd_scores->get_metrics()) {
         # Do something with...
-        print $atd_metric->get_type(), "/", $atd_metric->get_key(), 
+        print $atd_metric->get_type(), "/", $atd_metric->get_key(),
             " = ", $atd_metric->get_value(), "\n";
     }
 

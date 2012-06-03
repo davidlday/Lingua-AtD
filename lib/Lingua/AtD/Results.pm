@@ -12,9 +12,14 @@ use Class::Std;
 {
 
     # Attributes
-    my %xml_of : ATTR( :init_arg<xml> :get<xml> );
-    my %server_message_of : ATTR( :get<server_exception> );
-    my %errors_of : ATTR();
+    my %xml_of :
+        ATTR( :init_arg<xml> :get<xml> );
+    my %server_exception_of :
+        ATTR( :get<server_exception> );
+    my %error_count_of :
+        ATTR( :get<error_count> :default<0> );
+    my %errors_of :
+        ATTR();
 
     sub START {
         my ( $self, $ident, $arg_ref ) = @_;
@@ -25,9 +30,11 @@ use Class::Std;
 
         # Check for server message.
         if ( $dom->exists('/results/message') ) {
-            $server_message_of{$ident} = $dom->findvalue('/results/message');
-            Lingua::AtD::ServiceException->throw(
-                service_message => $server_message_of{$ident} );
+            $server_exception_of{$ident} = $dom->findvalue('/results/message');
+            # TODO: Implement Exceptions
+            croak $server_exception_of{$ident};
+#            Lingua::AtD::ServiceException->throw(
+#                service_message => $server_exception_of{$ident} );
         }
 
         foreach my $error_node ( $dom->findnodes('/results/error') ) {
@@ -52,6 +59,7 @@ use Class::Std;
                 }
             );
             push( @atd_errors, $atd_error );
+            $error_count_of{$ident} += 1;
         }
         $errors_of{$ident} = [@atd_errors];
 
@@ -60,12 +68,13 @@ use Class::Std;
 
     sub has_server_exception {
         my $self = shift;
-        return defined( $server_message_of{ ident($self) } ) ? 1 : 0;
+        return defined( $server_exception_of{ ident($self) } ) ? 1 : 0;
     }
 
     sub has_errors {
         my $self = shift;
-        return defined( $errors_of{ ident($self) } ) ? 1 : 0;
+#        return defined( $errors_of{ ident($self) } ) ? 1 : 0;
+        return ( $error_count_of{ ident($self) } > 0 ) ? 1 : 0;
     }
 
     sub get_errors {
@@ -83,7 +92,7 @@ __END__
 =head1 SYNOPSIS
 
     use Lingua::AtD;
-    
+
     # Create a new service proxy
     my $atd = Lingua::AtD->new( {
         host => 'service.afterthedeadline.com',
@@ -91,28 +100,28 @@ __END__
     });
 
     # Run spelling and grammar checks. Returns a Lingua::AtD::Response object.
-    my $atd_response = $atd->check_document('Text to check.');
+    my $doc_check = $atd->check_document('Text to check.');
     # Loop through reported document errors.
-    foreach my $atd_error ($atd_response->get_errors()) {
+    foreach my $atd_error ($doc_check->get_errors()) {
         # Do something with...
         print "Error string: ", $atd_error->get_string(), "\n";
     }
-    
-    # Run only grammar checks. Essentially the same as 
+
+    # Run only grammar checks. Essentially the same as
     # check_document(), sans spell-check.
-    my $atd_response = $atd->check_grammar('Text to check.');
+    my $grmr_check = $atd->check_grammar('Text to check.');
     # Loop through reported document errors.
-    foreach my $atd_error ($atd_response->get_errors()) {
+    foreach my $atd_error ($grmr_check->get_errors()) {
         # Do something with...
         print "Error string: ", $atd_error->get_string(), "\n";
     }
-    
+
     # Get statistics on a document. Returns a Lingua::AtD::Scores object.
     my $atd_scores = $atd->stats('Text to check.');
     # Loop through reported document errors.
     foreach my $atd_metric ($atd_scores->get_metrics()) {
         # Do something with...
-        print $atd_metric->get_type(), "/", $atd_metric->get_key(), 
+        print $atd_metric->get_type(), "/", $atd_metric->get_key(),
             " = ", $atd_metric->get_value(), "\n";
     }
 
@@ -127,7 +136,7 @@ Encapsulates conversion of the XML response from the AtD server into a list of s
     foreach my $atd_error ($atd_results->get_errors()) {
         # Do something really fun...
     }
-    
+
 Lingua::AtD::Results objects should only ever be created from method calls to L<Lingua::AtD>. However, if you have saved XML responses from prior calls to AtD, you can use this object to convert those responses into PERL objects. I won't stop you.
 
 See the L<SYNOPSIS> for typical usage.
