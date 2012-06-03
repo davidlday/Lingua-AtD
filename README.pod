@@ -42,6 +42,8 @@ Lingua::AtD provides an OO-style interface for After the Deadline's grammar and 
 
 =head1 METHODS
 
+=over 4
+
 =item new
 
 This constructor takes four arguments, all optional. The sample below shows the defaults.
@@ -132,6 +134,8 @@ From the L<API Documentation|http://www.afterthedeadline.com/api.slp>: I<Checks 
 Invokes the stats service for some string of text and return a L<Lingua::AtD::Scores> object. This differs from I<check_document> in that it only checks grammar and style, not spelling.
 
 From the L<API Documentation|http://www.afterthedeadline.com/api.slp>: I<Returns statistics about the writing quality of a document>
+
+=back
 
 =head1 BUGS
 
