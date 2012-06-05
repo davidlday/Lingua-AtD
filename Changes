@@ -2,6 +2,11 @@ Revision history for {{$dist->name}}
 
 {{$NEXT}}
 
+1.121570  2012-06-05 04:30:02 EST
+    * Changed default throttle to 2 seconds. Tests failing enough to
+      show 1 second is too unstable. (www.cpantesters.org).
+    * Minor documentation corrections.
+
 1.121550  2012-06-02 19:41:25 EST
     * Added 32 hex digits to API Key per AtD Documentation
     * Added get_error_count() to Results.
