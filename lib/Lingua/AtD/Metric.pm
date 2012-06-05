@@ -26,6 +26,7 @@ __END__
     my $atd = Lingua::AtD->new( {
         host => 'service.afterthedeadline.com',
         port => 80
+        throttle => 2,
     });
 
     # Run spelling and grammar checks. Returns a Lingua::AtD::Response object.

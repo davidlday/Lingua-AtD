@@ -5,7 +5,9 @@ use Test::Exception;
 plan tests => 13;
 
 use_ok('Lingua::AtD');
-my $atd = Lingua::AtD->new();
+my $atd              = Lingua::AtD->new();
+my $default_throttle = $atd->get_throttle();
+
 isa_ok( $atd, 'Lingua::AtD' );
 is(
     $atd->get_service_host(),
@@ -18,9 +20,9 @@ is(
     'http://service.afterthedeadline.com:80/',
     ' get_service_url()'
 );
-is( $atd->get_throttle(),  1, ' get_throttle()' );
-is( $atd->set_throttle(2), 1, ' set_throttle()' );
-is( $atd->set_throttle(1), 2, ' set_throttle()' );
+is( $atd->get_throttle(),   $default_throttle, ' get_throttle()' );
+is( $atd->set_throttle(10), $default_throttle, ' set_throttle()' );
+is( $atd->set_throttle($default_throttle), 10, ' set_throttle()' );
 
 my $atd_bogus = Lingua::AtD->new( { host => '500.500.500', port => 200200 } );
 isa_ok( $atd_bogus, 'Lingua::AtD' );
@@ -29,7 +31,7 @@ is( $atd_bogus->get_service_host(),
 is( $atd_bogus->get_service_port(), 200200, ' get_service_port() [bogus]' );
 is( $atd_bogus->get_service_url(),
     'http://500.500.500:200200/', ' get_service_url() [bogus]' );
-is( $atd_bogus->get_throttle(), 1, ' get_throttle()' );
+is( $atd_bogus->get_throttle(), $default_throttle, ' get_throttle()' );
 
 # Exceptions removed for now.
 #throws_ok( sub { $atd_bogus->stats('should throw an exception') },

@@ -10,17 +10,19 @@ my $good_string = "May I have a cheeseburger?";
 use_ok('Lingua::AtD');
 my $atd = Lingua::AtD->new();
 isa_ok( $atd, 'Lingua::AtD' );
+my $default_throttle = $atd->get_throttle();
 
 # Check dying
 # Remove throttle
-is( $atd->set_throttle(0), 1, ' get_throttle()' );
-is( $atd->get_throttle(0), 0, ' get_throttle() [validate removed]' );
+is( $atd->set_throttle(0), $default_throttle, ' get_throttle() [remove]' );
+is( $atd->get_throttle(), 0, ' get_throttle() [validate removed]' );
 lives_ok( sub { $atd->check_document($bad_string) }, ' expecting to live.', );
 dies_ok( sub { $atd->check_document($bad_string) }, ' expecting to die.', );
 
 # Restore throttle
-is( $atd->set_throttle(1), 0, ' get_throttle()' );
-is( $atd->get_throttle(0), 1, ' get_throttle() [validate restored]' );
+is( $atd->set_throttle($default_throttle), 0, ' get_throttle() [restore]' );
+is( $atd->get_throttle(), $default_throttle,
+    ' get_throttle() [validate restored]' );
 
 # Verify Throttle
 lives_ok( sub { $atd->check_document($bad_string) }, ' expecting to live.', );

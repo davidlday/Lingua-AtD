@@ -18,12 +18,12 @@ use URI;
     my %api_key_of :
       ATTR( :init_arg<api_key> :get<api_key> :default<'Lingua-AtD'> );
     my %throttle_of :
-      ATTR( :init_arg<throttle> :get<throttle> :set<throttle> :default<1> );
+      ATTR( :init_arg<throttle> :get<throttle> :set<throttle> :default<2> );
     my %last_call_of : ATTR( :get<last_call> :default<0> );
     my %service_host_of :
-      ATTR( :init_arg<host>    :get<service_host> :default<'service.afterthedeadline.com'> );
+      ATTR( :init_arg<host> :get<service_host> :default<'service.afterthedeadline.com'> );
     my %service_port_of :
-      ATTR( :init_arg<port>    :get<service_port> :default<80> );
+      ATTR( :init_arg<port> :get<service_port> :default<80> );
     my %service_url_of : ATTR( :get<service_url> );
 
     sub START {
@@ -110,7 +110,7 @@ __END__
     my $atd = Lingua::AtD->new( {
         host     => 'service.afterthedeadline.com',
         port     => 80,
-        throttle => 1,
+        throttle => 2,
     });
 
     # Run spelling and grammar checks. Returns a Lingua::AtD::Response object.
@@ -158,7 +158,7 @@ This constructor takes four arguments, all optional. The sample below shows the 
 
 =item api_key
 
-API key used to access the service. Defaults to this package's name: I<Lingua-AtD>. Please consider creating your own. See the L<API Documentation|http://www.afterthedeadline.com/api.slp> for requirements. The default will work, and so far as I know will cause no problems.
+API key used to access the service. Defaults to this package's name plus 32 hex digits (i.e. I<Lingua-AtD>-7b8391f59fd9fa4246b2c69cd8793b88). See the L<API Documentation|http://www.afterthedeadline.com/api.slp> for requirements.
 
 =item host
 
@@ -170,7 +170,7 @@ Port for the AtD service. Defaults to the standard http port: I<80>. AtD's softw
 
 =item throttle
 
-There's no API documentation stating such, but testing has shown that AtD service throws a 503 error if called too quickly. This specifies the number of seconds to wait between calls. The default is 1 and seems to work find.
+There's no API documentation stating such, but testing has shown that AtD service throws a 503 error if called too quickly. This specifies the number of seconds to wait between calls. The default is 2 and seems to work fine. If you see 503 errors, consider bumping this up more.
 
 =back
 
