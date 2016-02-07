@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+    * Removed tests making calls to the service. Network connectivity and lag is generally unpredictable and caused intermittant failures for cpantesters.
 
 1.121570  2012-06-05 04:30:02 EST
     * Changed default throttle to 2 seconds. Tests failing enough to
