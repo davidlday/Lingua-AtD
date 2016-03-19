@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+1.160790  2016-03-19 08:39:10-05:00 EST
     * Removed tests making calls to the service. Network connectivity and lag are generally unpredictable and caused intermittant failures for cpantesters.
 
 1.121570  2012-06-05 04:30:02 EST
